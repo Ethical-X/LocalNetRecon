@@ -31,9 +31,9 @@ to install psutil you can run:
 
 Project Structure:
 localnetrecon/
-├── main.py                 # Main program logic & user interaction
-├── scan.py                 # nmap wrapper functions
-└── detect_interfaces.py    # Network interface detection
+├── main.py                 # Main program logic & user interaction\n
+├── scan.py                 # nmap wrapper functions\n
+└── detect_interfaces.py    # Network interface detection\n
 
 ## Usage
 Clone or download the project and navigate into the folder:
