@@ -30,10 +30,10 @@ to install psutil you can run:
 `python3 -m pip install -r requirements.txt`
 
 Project Structure:
-localnetrecon/
-├── main.py                 # Main program logic & user interaction\n
-├── scan.py                 # nmap wrapper functions\n
-└── detect_interfaces.py    # Network interface detection\n
+- localnetrecon/
+- ├── main.py                 # Main program logic & user interaction
+- ├── scan.py                 # nmap wrapper functions
+- └── detect_interfaces.py    # Network interface detection
 
 ## Usage
 Clone or download the project and navigate into the folder:
