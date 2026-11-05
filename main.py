@@ -3,6 +3,7 @@ import scan
 import ipaddress
 import re
 
+# Prints nmap output with the programs format.
 def print_output(results):
     try:
         lines = results.split("\n")
@@ -29,7 +30,7 @@ def choose_interface():
     elif len(detected_interfaces) == 1:
         print("| Detected only 1 usable interface:")
         for i in detected_interfaces:
-            print(f"| {interface_num}. Name: {i} | IP: {detected_interfaces[i][0]} | NETMASK: {detected_interfaces[i][1]}")
+            print(f"| Name: {i} | IP: {detected_interfaces[i][0]} | NETMASK: {detected_interfaces[i][1]}")
         interface_selected = i
 
     # Else if multiple interfaces are detected it asks the user which interface to use.
@@ -86,12 +87,12 @@ def answer():
 # This prints all ip's available for scanning and prompts the user to choose which to scan.
 def choose_ip(iplist, user_ip):
     ip_num = 0
-    available_ips = []
+    available_ips = set()
     chosen_ips = []
 
     for ipaddr in iplist:
         if ipaddr != user_ip:
-            available_ips.append(ipaddr)
+            available_ips.add(ipaddr)
 
     for ip in available_ips:
         print(f"| {ip_num}. {ip}")

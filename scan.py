@@ -6,7 +6,9 @@ def host_discovery(iprange):
         result = subprocess.run(["nmap", "-sn", iprange], capture_output=True, text=True)
         return result.stdout
     except PermissionError as e:
-        print(f"Permission Denied: {e}")
+        print(f"| Permission Denied: {e}")
+    except FileNotFoundError as e:
+        print(f"| Error: {e}")
 
 
 def scan_host(ip, flags):
@@ -30,5 +32,7 @@ def scan_host(ip, flags):
         return result.stdout
 
     except PermissionError as e:
-        print(f"Permission Denied: {e}")
+        print(f"| Permission Denied: {e}")
+    except FileNotFoundError as e:
+        print(f"| Error: {e}")
 

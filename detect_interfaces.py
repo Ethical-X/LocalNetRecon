@@ -1,4 +1,6 @@
 import psutil
+import socket
+import ipaddress
 
 # Grabs all interfaces
 def grab_interfaces():
@@ -7,10 +9,14 @@ def grab_interfaces():
     interfaces_dict = psutil.net_if_addrs()
 
     for interface in interfaces_dict:
-        # Avoids adding loopback addresses and unusable interfaces.
-        if interface != "lo" and interfaces_dict[interface][0].netmask != None and interfaces_dict[interface][0].netmask != "ffff:ffff:ffff:ffff::":
-            # Adds every interface to interfaces_to_use with its ip and netmask to display later on.
-            interfaces_to_use.update({interface: [interfaces_dict[interface][0].address, interfaces_dict[interface][0].netmask]})
-    
+        for address in interfaces_dict[interface]:
+
+            # rejects any non ipv4 addresses and loopback addresses.
+            if address.family != socket.AF_INET or address.netmask == None or ipaddress.ip_address(address.address).is_loopback:
+                continue
+
+            interfaces_to_use.update({interface: [address.address, address.netmask]})
+            break
+
     return interfaces_to_use
 
