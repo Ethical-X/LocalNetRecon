@@ -6,6 +6,7 @@ import re
 # Prints nmap output with the programs format.
 def print_output(results):
     try:
+        print("| ")
         lines = results.split("\n")
         for line in lines:
             print(f"| {line}")
@@ -28,17 +29,21 @@ def choose_interface():
 
     # If only one interface is detected it defaults to it.
     elif len(detected_interfaces) == 1:
+        print("| ")
         print("| Detected only 1 usable interface:")
         for i in detected_interfaces:
             print(f"| Name: {i} | IP: {detected_interfaces[i][0]} | NETMASK: {detected_interfaces[i][1]}")
         interface_selected = i
+        print("| ")
 
     # Else if multiple interfaces are detected it asks the user which interface to use.
     else:
+        print("| ")
         print(f"| Detected {len(detected_interfaces)} Interfaces:")
         for i in detected_interfaces:
             print(f"| {interface_num}. Name: {i} | IP: {detected_interfaces[i][0]} | NETMASK: {detected_interfaces[i][1]}") 
             interface_num += 1
+        print("| ")
 
         while True:
             try:
@@ -87,12 +92,12 @@ def answer():
 # This prints all ip's available for scanning and prompts the user to choose which to scan.
 def choose_ip(iplist, user_ip):
     ip_num = 0
-    available_ips = set()
+    available_ips = []
     chosen_ips = []
 
     for ipaddr in iplist:
-        if ipaddr != user_ip:
-            available_ips.add(ipaddr)
+        if ipaddr != user_ip and ipaddr not in available_ips:
+            available_ips.append(ipaddr)
 
     for ip in available_ips:
         print(f"| {ip_num}. {ip}")
@@ -112,6 +117,8 @@ def choose_ip(iplist, user_ip):
                     else:
                         chosen_ips.append(available_ips[int(num)])
     except IndexError as e:
+        print(f"| ERROR: {e}")
+    except TypeError as e:
         print(f"| ERROR: {e}")
 
     return chosen_ips, available_ips
@@ -137,17 +144,17 @@ def main():
     print_output(scan_output)
     iplist = get_ips(scan_output)
 
-    print("| ===================================")
+    print("| ===========================================")
     print("| NMAP HOST DISCOVERY SCAN COMPLETED.")
     print("| Proceed with scanning individual IP'S? (Yes/No)")
 
     y_or_n = answer()
 
     if not y_or_n:
-        print("| Exiting...")
+        print("| ============== GOODBYE :) ==============")
         return
 
-    print("| =====================")
+    print("| ===========================================")
     print("| Choose an IP'S to scan comma seperated e.g (0,1,2) or press enter to scan all:")
 
     ips_selected, available_ips = choose_ip(iplist, user_ip)
@@ -161,14 +168,18 @@ def main():
     print("| Would you like to Specify scan flags?")
     select_flags = answer()
 
-    if select_flags:
+    # Asks the user whether to use the same flags for each scan only if theres more than 1 ip being scanned
+    # And when the user has chosen flags.
+    if select_flags and len(ips_selected) > 1:
         print("| Would you like to use the same flags for every scan?")
         flags_option = answer()
+    else:
+        flags_option = False
 
     if select_flags and flags_option:
         print("| Enter flags space-seperated e.g (-p 80,443 -sV)")
         flags = input("|: ")
-        print("| =============================================")
+        print("| ================================================")
 
         for ip in ips_selected:
             scan_output = scan.scan_host(ip,flags)
