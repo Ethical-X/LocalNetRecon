@@ -108,14 +108,23 @@ def choose_ip(iplist, user_ip):
 
         if option:
             option = option.split(",")
+
             for num in option:
+                num = num.strip()
+
                 # Filters any invalid input like a character,empty input or number outside of the available_ips.
                 if num:
-                    if not num.isdigit() or int(num) < 0 or int(num) >= ip_num:
+                    if not num.isdigit() or int(num) >= len(available_ips):
                         print(f"| SKIPPING INVALID OPTION: {num}")
                         continue
-                    else:
-                        chosen_ips.append(available_ips[int(num)])
+                    # selected_ip is the ip that num corrolates to in available_ips and is used below to detect duplicate input.
+                    selected_ip = available_ips[int(num)]
+
+                    if selected_ip in chosen_ips:
+                        print(f"| IGNORING DUPLICATE: {selected_ip}")
+                        continue
+
+                    chosen_ips.append(selected_ip)
     except IndexError as e:
         print(f"| ERROR: {e}")
     except TypeError as e:
